@@ -1,0 +1,12 @@
+#!/bin/bash
+# InfluxDB listens on port 8086
+
+if ! curl --silent http://localhost:8086/ping ; then
+  echo "InfluxDB is not running"
+  RET=1
+else
+  echo "InfluxDB is running"
+  RET=0
+fi
+
+exit $RET

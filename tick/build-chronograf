@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd chronograf
+docker build --tag tick-chronograf .
+

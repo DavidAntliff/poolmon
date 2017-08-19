@@ -1,0 +1,14 @@
+#!/bin/bash
+
+. $(dirname $0)/common
+
+if ./check-influxdb ; then
+  docker run \
+    --rm \
+	--tty \
+	--interactive \
+	--name influxdb-cli \
+	--network $NETWORK \
+	tick-influxdb \
+	influx -host influxdb
+fi

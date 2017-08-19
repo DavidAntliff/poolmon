@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. $(dirname $0)/common
+KAPACITOR=$SRV/kapacitor
+
+docker run \
+    --rm \
+    --tty \
+	--interactive \
+	--name kapacitor \
+	--network $NETWORK \
+	--publish 9092:9092 \
+	--env "KAPACITOR_HOSTNAME=kapacitor" \
+	--env "KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086" \
+	--volume $KAPACITOR/kapacitor.conf:/etc/kapacitor/kapacitor.conf:ro \
+	--volume $KAPACITOR/data:/var/lib/kapacitor \
+	tick-kapacitor

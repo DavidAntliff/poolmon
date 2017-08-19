@@ -1,0 +1,23 @@
+#!/bin/bash
+
+. $(dirname $0)/common
+TELEGRAF=$SRV/telegraf
+
+docker run \
+	--rm \
+    --tty \
+	--interactive \
+	--name telegraf \
+	--network $NETWORK \
+	--publish 8092:8092/udp \
+	--publish 8094:8094 \
+	--publish 8125:8125/udp \
+	--env "HOST_PROC=/rootfs/proc" \
+	--env "HOST_SYS=/rootfs/sys" \
+	--env "HOST_ETC=/rootfs/etc" \
+	--volume $TELEGRAF/telegraf.conf:/etc/telegraf/telegraf.conf:ro \
+	--volume /var/run/docker.sock:/var/run/docker.sock:ro \
+	--volume /sys:/rootfs/sys:ro \
+	--volume /proc:/rootfs/proc:ro \
+	--volume /etc:/rootfs/etc:ro \
+	tick-telegraf

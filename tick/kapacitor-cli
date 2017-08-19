@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. $(dirname $0)/common
+
+if ./check-kapacitor ; then
+  docker run \
+    --rm \
+	--tty \
+	--interactive \
+	--name kapacitor-cli \
+	--network $NETWORK \
+	--env "KAPACITOR_URL=http://kapacitor:9092" \
+	tick-kapacitor \
+	bash
+fi

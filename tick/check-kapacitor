@@ -1,0 +1,12 @@
+#!/bin/bash
+# Kapacitor listens on port 9092
+
+if ! curl --silent http://localhost:9092/kapacitor/v1/ping ; then
+  echo "Kapacitor is not running"
+  RET=1
+else
+  echo "Kapacitor is running"
+  RET=0
+fi
+
+exit $RET

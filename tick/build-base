@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd tick/base
+docker build --tag tick-base .

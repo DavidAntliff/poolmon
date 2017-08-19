@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd kapacitor
+docker build --tag tick-kapacitor .
+

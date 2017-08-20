@@ -9,6 +9,7 @@ if ./check-kapacitor ; then
       --tty \
       --interactive \
       --name kapacitor-cli \
+      --hostname kapacitor-cli \
       --network $NETWORK \
       --env "KAPACITOR_URL=http://kapacitor:9092" \
       poolmon/kapacitor \

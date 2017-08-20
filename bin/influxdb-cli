@@ -9,6 +9,7 @@ if ./check-influxdb ; then
       --tty \
       --interactive \
       --name influxdb-cli \
+      --hostname influxdb-cli \
       --network $NETWORK \
       poolmon/influxdb \
       influx -host influxdb

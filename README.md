@@ -33,7 +33,6 @@ it down entirely (to create new containers on next up) with:
 
     $ docker-compose -p poolmon down
 
-
 ## Interfaces
 
 Access the Chronograf interface via HTTP on port 8888.
@@ -42,6 +41,17 @@ You can use an embedded device to publish data via MQTT, or use [mqtt-spy](http:
 to publish data and monitor your topics. Scripts can be used to automate publishing data, such as simulating
 temperature measurement data.
 
+## Roadmap
+
+* Add [Grafana](https://grafana.com/) to the TICK stack.
+* Get ESP32 talking MQTT.
+* Enable MQTT security.
+* Enable InfluxDB security.
+
 ## Acknowledgements
 
 * [rpi-mosquitto](https://github.com/pascaldevink/rpi-mosquitto.git) - Pascal de Vink
+* [influxdata/TICK-docker](https://github.com/influxdata/TICK-docker/blob/master/1.2/docker-compose.yml)
+* [influxdata/sandbox](https://github.com/influxdata/sandbox/blob/master/docker-compose.yml)
+* [influxdata/influxdata-docker](https://github.com/influxdata/influxdata-docker)
+

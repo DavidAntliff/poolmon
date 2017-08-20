@@ -1,2 +1,2 @@
 SRV_ROOT=$PWD/../srv
-NETWORK=poolmon_net
+NETWORK=poolmon_default

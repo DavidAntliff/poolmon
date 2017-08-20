@@ -1,0 +1,82 @@
+# SRV comes from .env
+
+version: '3'
+
+services:
+
+  tickbase:
+    image: poolmon/tickbase
+    build: tickbase/
+
+  telegraf:
+    hostname: telegraf
+    image: poolmon/telegraf
+    depends_on:
+      - tickbase
+      - influxdb
+    build: telegraf/
+    environment:
+      HOST_PROC: "/rootfs/proc"
+      HOST_SYS: "/rootfs/sys"
+      HOST_ETC: "/rootfs/etc"
+    ports:
+      - "8092:8092/udp"
+      - "8094:8094"
+      - "8125:8125/udp"
+    volumes:
+      - ${SRV}/telegraf/config/:/etc/telegraf/:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+
+  influxdb:
+    hostname: influxdb
+    image: poolmon/influxdb
+    depends_on:
+      - tickbase
+    build: influxdb/
+    ports:
+      - "8086:8086"
+    volumes:
+      - ${SRV}/influxdb/config/:/etc/influxdb/:ro
+      - ${SRV}/influxdb/data/:/var/lib/influxdb/
+
+  chronograf:
+    hostname: chronograf
+    image: poolmon/chronograf
+    depends_on:
+      - tickbase
+      - kapacitor
+      - influxdb
+      - telegraf
+    build: chronograf/
+    environment:
+      INFLUXDB_URL: "http://influxdb:8086"
+      KAPACITOR_URL: "http://kapacitor:9092"
+    ports:
+      - "8888:8888"
+    volumes:
+      - ${SRV}/chronograf/data/:/var/lib/chronograf/
+
+  kapacitor:
+    hostname: kapacitor
+    image: poolmon/kapacitor
+    depends_on:
+      - tickbase
+      - influxdb
+    build: kapacitor/
+    environment:
+      KAPACITOR_HOSTNAME: "kapacitor"
+      KAPACITOR_INFLUXDB_0_URLS_0: "http://influxdb:8086"
+    ports:
+      - "9092:9092"
+    volumes:
+      - ${SRV}/kapacitor/config/:/etc/kapacitor/:ro
+      - ${SRV}/kapacitor/data/:/var/lib/kapacitor/
+
+
+    # command: /bin/bash
+    # stdin_open: true
+    # tty: true
+

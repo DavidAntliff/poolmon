@@ -4,6 +4,18 @@ version: '3'
 
 services:
 
+  mosquitto:
+    hostname: mosquitto
+    image: poolmon/mosquitto
+    build: mosquitto/
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ${SRV}/mosquitto/config/:/mqtt/config/:ro
+      - ${SRV}/mosquitto/log/:/mqtt/log/
+      - ${SRV}/mosquitto/data/:/mqtt/data/
+
   tickbase:
     image: poolmon/tickbase
     build: tickbase/
@@ -14,6 +26,7 @@ services:
     depends_on:
       - tickbase
       - influxdb
+      - mosquitto
     build: telegraf/
     environment:
       HOST_PROC: "/rootfs/proc"

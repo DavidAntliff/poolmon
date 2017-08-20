@@ -15,4 +15,4 @@ docker run \
     --volume $SRV/config/:/mqtt/config/:ro \
     --volume $SRV/log/:/mqtt/log/ \
     --volume $SRV/data/:/mqtt/data/ \
-    poolmon/mosquitto:latest
+    poolmon/mosquitto

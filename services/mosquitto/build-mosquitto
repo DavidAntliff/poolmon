@@ -1,12 +1,4 @@
 #!/bin/bash
 
 cd $(dirname $0)
-
-if cd rpi-mosquitto.git ; then
-  git pull
-else
-  git clone https://github.com/pascaldevink/rpi-mosquitto.git rpi-mosquitto.git
-  cd rpi-mosquitto.git
-fi
-
 docker build --tag poolmon/mosquitto .

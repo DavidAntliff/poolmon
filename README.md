@@ -35,3 +35,6 @@ Hit CTRL-C to terminate the stack. You can then bring it back up with the `up` c
 Access the Chronograf interface via HTTP on port 8888.
 
 
+## Acknowledgements
+
+* [rpi-mosquitto](https://github.com/pascaldevink/rpi-mosquitto.git) - Pascal de Vink

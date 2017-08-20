@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cd $(dirname $0)
+. ../common
+SRV=$SRV_ROOT/kapacitor
+
+docker run \
+    --rm \
+    --tty \
+	--interactive \
+	--name kapacitor \
+	--network $NETWORK \
+	--publish 9092:9092 \
+	--env "KAPACITOR_HOSTNAME=kapacitor" \
+	--env "KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086" \
+	--volume $SRV/config/:/etc/kapacitor/:ro \
+	--volume $SRV/data/:/var/lib/kapacitor/ \
+	poolmon/kapacitor

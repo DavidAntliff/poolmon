@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cd $(dirname $0)
+. ../common
+SRV=$SRV_ROOT/mosquitto
+
+docker run \
+    --rm \
+    --tty \
+    --interactive \
+    --name mosquitto \
+	--network $NETWORK \
+    --publish 1883:1883 \
+    --publish 9001:9001 \
+    --volume $SRV/config/:/mqtt/config/:ro \
+    --volume $SRV/log/:/mqtt/log/ \
+    --volume $SRV/data/:/mqtt/data/ \
+    poolmon/mosquitto:latest

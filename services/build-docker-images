@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+
+mosquitto/build-mosquitto
+tickbase/build-tickbase
+telegraf/build-telegraf
+influxdb/build-influxdb
+kapacitor/build-kapacitor
+chronograf/build-chronograf

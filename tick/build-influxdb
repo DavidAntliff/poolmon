@@ -1,5 +1,0 @@
-#!/bin/bash
-
-cd influxdb
-docker build --tag tick-influxdb .
-

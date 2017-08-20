@@ -1,0 +1,16 @@
+#!/bin/bash
+
+cd $(dirname $0)
+. ../common
+SRV=$SRV_ROOT/influxdb
+
+docker run \
+    --rm \
+    --tty \
+	--interactive \
+	--name influxdb \
+	--network $NETWORK \
+	--publish 8086:8086 \
+	--volume $SRV/config/:/etc/influxdb/:ro \
+	--volume $SRV/data/:/var/lib/influxdb/ \
+	poolmon/influxdb

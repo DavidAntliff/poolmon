@@ -1,4 +1,0 @@
-#!/bin/bash
-
-cd telegraf
-docker build --tag tick-telegraf .

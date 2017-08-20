@@ -1,5 +1,0 @@
-rpi-mosquitto.git/
-srv/mqtt/data/
-srv/mqtt/log/
-srv/influxdb/data/meta/
-

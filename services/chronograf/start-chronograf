@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cd $(dirname $0)
+. ../common
+SRV=$SRV_ROOT/chronograf
+
+docker run \
+	--rm \
+	--tty \
+	--interactive \
+	--name chronograf \
+	--network $NETWORK \
+	--publish 8888:8888 \
+	--env "INFLUXDB_URL=http://influxdb:8086" \
+	--env "KAPACITOR_URL=http://kapacitor:9092" \
+	--volume $SRV/data/:/var/lib/chronograf/ \
+	poolmon/chronograf
+

@@ -1,14 +1,15 @@
 #!/bin/bash
 
-. $(dirname $0)/common
+cd $(dirname $0)
+. ../services/common
 
 if ./check-influxdb ; then
   docker run \
-    --rm \
-	--tty \
-	--interactive \
-	--name influxdb-cli \
-	--network $NETWORK \
-	tick-influxdb \
-	influx -host influxdb
+      --rm \
+      --tty \
+      --interactive \
+      --name influxdb-cli \
+      --network $NETWORK \
+      poolmon/influxdb \
+      influx -host influxdb
 fi

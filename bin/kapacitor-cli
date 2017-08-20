@@ -1,15 +1,16 @@
 #!/bin/bash
 
-. $(dirname $0)/common
+cd $(dirname $0)
+. ../services/common
 
 if ./check-kapacitor ; then
   docker run \
-    --rm \
-	--tty \
-	--interactive \
-	--name kapacitor-cli \
-	--network $NETWORK \
-	--env "KAPACITOR_URL=http://kapacitor:9092" \
-	tick-kapacitor \
-	bash
+      --rm \
+      --tty \
+      --interactive \
+      --name kapacitor-cli \
+      --network $NETWORK \
+      --env "KAPACITOR_URL=http://kapacitor:9092" \
+      poolmon/kapacitor \
+      bash
 fi

@@ -88,6 +88,18 @@ services:
       - ${SRV}/kapacitor/config/:/etc/kapacitor/:ro
       - ${SRV}/kapacitor/data/:/var/lib/kapacitor/
 
+  grafana:
+    hostname: grafana
+    image: poolmon/grafana
+    depends_on:
+      - influxdb
+    build: grafana/
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${SRV}/grafana/config/:/etc/grafana/:ro
+      - ${SRV}/grafana/data/:/var/lib/grafana/
+
 
     # command: /bin/bash
     # stdin_open: true

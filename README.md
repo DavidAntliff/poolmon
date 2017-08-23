@@ -19,19 +19,23 @@ Docker Compose:
 To build all the docker containers:
 
     $ cd services
-	$ docker-compose build
+    $ docker-compose build
 
 ## Running
 
 To start the stack (`--force-recreate` used to ensure fresh containers):
 
     $ cd services
-	$ docker-compose -p poolmon up --force-recreate
+    $ docker-compose -p poolmon up --force-recreate
 
 Hit CTRL-C to terminate the stack. You can then bring it back up with the `up` command immediately, or shut\
 it down entirely (to create new containers on next up) with:
 
     $ docker-compose -p poolmon down
+
+If changes are made to a Dockerfile, you can rebuild the images and restart only the changed services with:
+
+    $ docker-compose -p poolmon up -d --build
 
 ## Interfaces
 

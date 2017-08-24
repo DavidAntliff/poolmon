@@ -6,7 +6,7 @@ services:
 
   mosquitto:
     hostname: mosquitto
-    image: poolmon/mosquitto
+    image: poolmon/mosquitto:latest
     build: mosquitto/
     ports:
       - "1883:1883"
@@ -22,7 +22,7 @@ services:
 
   telegraf:
     hostname: telegraf
-    image: poolmon/telegraf
+    image: poolmon/telegraf:latest
     depends_on:
       - tickbase
       - influxdb
@@ -45,7 +45,7 @@ services:
 
   influxdb:
     hostname: influxdb
-    image: poolmon/influxdb
+    image: poolmon/influxdb:latest
     depends_on:
       - tickbase
     build: influxdb/
@@ -57,7 +57,7 @@ services:
 
   chronograf:
     hostname: chronograf
-    image: poolmon/chronograf
+    image: poolmon/chronograf:latest
     depends_on:
       - tickbase
       - kapacitor
@@ -74,7 +74,7 @@ services:
 
   kapacitor:
     hostname: kapacitor
-    image: poolmon/kapacitor
+    image: poolmon/kapacitor:latest
     depends_on:
       - tickbase
       - influxdb
@@ -90,7 +90,7 @@ services:
 
   grafana:
     hostname: grafana
-    image: poolmon/grafana
+    image: poolmon/grafana:latest
     depends_on:
       - influxdb
     build: grafana/
@@ -99,6 +99,7 @@ services:
     volumes:
       - ${SRV}/grafana/config/:/etc/grafana/:ro
       - ${SRV}/grafana/data/:/var/lib/grafana/
+      - ${SRV}/grafana/log/:/var/log/grafana/
 
 
     # command: /bin/bash

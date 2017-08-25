@@ -1,0 +1,21 @@
+var temp1 = stream
+    |from()
+        .database('telegraf')
+        .retentionPolicy('autogen')
+        .measurement('mqtt_consumer')
+        .groupBy('host')
+        .where(lambda: "topic" == 'mydevice/sensor1')
+    |httpOut('id')
+
+temp1
+    |eval(lambda: "value" * 2.0)
+        .as('value_doubled')
+    |httpOut('id2')
+    |influxDBOut()
+        .create()
+        .database('mydb')
+        .retentionPolicy('myrp')
+        .measurement('value_doubled')
+        .tag('kapacitor', 'true')
+        .tag('version', '0.2')
+

@@ -1,0 +1,9 @@
+stream
+    // Select just the cpu measurement from our example database
+    |from()
+        .measurement('cpu')
+    |alert()
+        // Compare values to running mean and standard deviation
+        .crit(lambda: sigma("usage_idle") > 3)
+        .log('/tmp/alerts_sigma.log')
+

@@ -87,6 +87,7 @@ services:
     volumes:
       - ${SRV}/kapacitor/config/:/etc/kapacitor/:ro
       - ${SRV}/kapacitor/data/:/var/lib/kapacitor/
+      - ${SRV}/kapacitor/log/:/var/log/kapacitor/
 
   grafana:
     hostname: grafana

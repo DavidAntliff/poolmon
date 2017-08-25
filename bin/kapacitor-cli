@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# mount current directory in container on /host
+CWD=$PWD
+
 cd $(dirname $0)
 . ../services/common
 
@@ -12,6 +15,7 @@ if ./check-kapacitor ; then
       --hostname kapacitor-cli \
       --network $NETWORK \
       --env "KAPACITOR_URL=http://kapacitor:9092" \
+      --volume $CWD/:/host/ \
       poolmon/kapacitor \
       bash
 fi

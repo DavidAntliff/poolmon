@@ -37,6 +37,10 @@ If changes are made to a Dockerfile, you can rebuild the images and restart only
 
     $ docker-compose -p poolmon up -d --build
 
+Optionally specify the service name:
+
+    $ docker-compose -p poolmon up -d --build kapacitor
+
 ## Interfaces
 
 Access the Chronograf interface via HTTP on port 8888.
@@ -44,6 +48,62 @@ Access the Chronograf interface via HTTP on port 8888.
 You can use an embedded device to publish data via MQTT, or use [mqtt-spy](http://kamilfb.github.io/mqtt-spy/)
 to publish data and monitor your topics. Scripts can be used to automate publishing data, such as simulating
 temperature measurement data.
+
+## TICKscripts
+
+Kapacitor uses TICKscripts to process streams of incoming data. These can be managed by the `kapacitor` program within
+the kapacitor-cli or kapacitor containers. Run `bin/kapacitor-cli` to access the former.
+
+To register a TICKscript against a database & retention policy:
+
+    $ kapacitor define <task_name> -type stream -tick <tick_script> -dbrp <database.rp>
+
+For example:
+
+    $ kapacitor define cpu_alert -type stream -tick cpu_alert.tick -dbrp telegraf.autogen
+
+To redefine a script after it has been modified:
+
+    $ kapacitor define <task_name> -tick <tick_script>
+
+For example:
+
+    $ kapacitor define cpu_alert -tick cpu_alert.tick
+
+To enable a stream:
+
+    $ kapacitor enable <task_name>
+
+To disable a stream:
+
+    $ kapacitor disable <task_name>
+
+To record a stream:
+
+    $ kapacitor record stream -task <task_name> -duration <duration>
+
+This returns a recording ID. Use it as <rid> below.
+
+To replay the stream through the task:
+
+    $ kapacitor replay -recording <rid> -task <task_name>
+
+To see all recordings:
+
+    $ kapacitor list recordings
+
+To see kapacitor processing stats:
+
+    $ kapacitor stats ingress
+
+To see all defined tasks (enabled or disabled):
+
+    $ kapacitor list tasks
+
+To examine a specific task:
+
+    $ kapacitor show <task_name>
+
 
 ## Roadmap
 

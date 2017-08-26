@@ -16,71 +16,10 @@ sensor1
 		.tolerance(2s)
 	|eval(lambda: "sensor2.value" - "sensor1.value")
 	    .as('diff')
-	|log()
+    |log()
     |influxDBOut()
-	    .database('telegraf')
+        .database('telegraf')
         .measurement('diff_sensor2_sensor1')
-		.buffer(1)    // .flushInterval(1s)
-
-// var testvalue1 = stream
-//     |from()
-// 	    .database('telegraf')
-//         .retentionPolicy('autogen')
-//         .measurement('mqtt_consumer')
-//         .where(lambda: "topic" == 'test/value/1')
-// 		.groupBy(*)
-// 	|httpOut('value1')
-
-// var testvalue2 = stream
-//     |from()
-// 	    .database('telegraf')
-//         .retentionPolicy('autogen')
-//         .measurement('mqtt_consumer')
-//         .where(lambda: "topic" == 'test/value/2')
-// 		.groupBy(*)
-// 	|httpOut('value2')
-
-// testvalue1
-//     |join(testvalue2)
-// 	    .as('value1', 'value2')
-// 		.tolerance(1s)
-//     |httpOut('join')
-//     |eval(lambda: "testvalue1.value1" - "testvalue1.value2")
-// 	    .as('diff')
-//     |httpOut('diff')
-//     |influxDBOut()
-//         .create()
-//         .database('mydb')
-//         .retentionPolicy('myrp')
-//         .measurement('diff')
-
-
-
-// var temps = stream
-//     |from()
-//         .database('telegraf')
-//         .retentionPolicy('autogen')
-//         .measurement('mqtt_consumer')
-//         .where(lambda: "topic" == 'mydevice/sensor1')
-//     |httpOut('temps')
-// 	|stats(1s)
-// 	|httpOut('stats')
-
-// var temp1 = stream
-//     |from()
-//         .database('telegraf')
-//         .retentionPolicy('autogen')
-//         .measurement('mqtt_consumer')
-//         .where(lambda: "topic" == 'mydevice/sensor1')
-//         .groupByMeasurement()
-//     |httpOut('temp1')
-
-// var temp2 = stream
-//     |from()
-//         .database('telegraf')
-//         .retentionPolicy('autogen')
-//         .measurement('mqtt_consumer')
-//         .where(lambda: "topic" == 'mydevice/sensor2')
-//         .groupByMeasurement()
-//     |httpOut('temp2')
+        //.buffer(1)
+        // .flushInterval(1s)
 

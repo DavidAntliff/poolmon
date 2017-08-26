@@ -1,0 +1,90 @@
+// Subtraction between two different measurements with perfectly aligned timestamps - works
+//
+// $ bin/influxdb-cli -import -path=TICKscript/test_data.txt -precision=s
+// kapacitor define test -type stream -tick test.tick -dbrp test.autogen
+// rid=$(kapacitor record query -query $'select * from "test"."autogen"."one" where time >= 1504000000s and time <= 1504000070s; select * from "test"."autogen"."two" where time >= 1504000000s and time <= 1504000170s' -type stream)
+// kapacitor replay -recording $rid -task test
+//
+// Check srv/kapacitor/log/kapacitor.log for result
+
+var one = stream
+    |from()
+	    .measurement('one')
+
+var two = stream
+    |from()
+	    .measurement('two')
+
+var three = stream
+    |from()
+	    .measurement('three')
+
+// one
+//     |join(two)
+// 	    .as('one', 'two')
+//     |log()
+// 	|eval(lambda: "two.value" - "one.value")
+// 	    .as('diff')
+//     |log()
+
+
+// to test an offset in a join:
+// rid=$(kapacitor record query -query $'select * from "test"."autogen"."one" where time >= 1504000000s and time <= 1504000100s; select * from "test"."autogen"."two" where time >= 1504000000s and time <= 1504000100s; select * from "test"."autogen"."three" where time >= 1504000000s and time <= 1504000100s' -type stream)
+
+// one
+//     |join(three)
+// 		.as('one', 'three')
+// 		.tolerance(5s)
+//     |log()
+// 	|eval(lambda: "three.value" - "one.value")
+// 	    .as('diff')
+//     |log()
+
+
+
+// to test from the same measurement
+// rid=$(kapacitor record query -query $'select * from "test"."autogen"."four" where time >= 1504000000s and time <= 1504000100s' -type stream)
+
+var foo4 = stream
+    |from()
+	    .measurement('four')
+		.where(lambda: "topic" == 'foo')
+//	|log()
+
+var bar4 = stream
+    |from()
+	    .measurement('four')
+		.where(lambda: "topic" == 'bar')
+//	|log()
+
+foo4
+    |join(bar4)
+	    .as('a', 'b')
+	|eval(lambda: "b.value" - "a.value")
+	    .as('diff')
+	|log()
+
+
+// to test from the same measurement with variable offset
+// rid=$(kapacitor record query -query $'select * from "test"."autogen"."five" where time >= 1504000000s and time <= 1504000100s' -type stream)
+
+var foo5 = stream
+    |from()
+	    .measurement('five')
+		.where(lambda: "topic" == 'foo')
+//	|log()
+
+var bar5 = stream
+    |from()
+	    .measurement('five')
+		.where(lambda: "topic" == 'bar')
+//	|log()
+
+foo5
+    |join(bar5)
+	    .as('a', 'b')
+		.tolerance(5s)
+	|eval(lambda: "b.value" - "a.value")
+	    .as('diff')
+	|log()
+

@@ -1,34 +1,58 @@
-var testvalue1 = stream
+var sensor1 = stream
     |from()
-	    .database('telegraf')
-        .retentionPolicy('autogen')
-        .measurement('mqtt_consumer')
-        .where(lambda: "topic" == 'test/value/1')
-		.groupBy(*)
-	|httpOut('value1')
+	    .measurement('mqtt_consumer')
+		.where(lambda: "topic" == 'mydevice/sensor1')
+	//|log()
 
-var testvalue2 = stream
+var sensor2 = stream
     |from()
-	    .database('telegraf')
-        .retentionPolicy('autogen')
-        .measurement('mqtt_consumer')
-        .where(lambda: "topic" == 'test/value/2')
-		.groupBy(*)
-	|httpOut('value2')
+	    .measurement('mqtt_consumer')
+		.where(lambda: "topic" == 'mydevice/sensor2')
+	//|log()
 
-testvalue1
-    |join(testvalue2)
-	    .as('value1', 'value2')
-		.tolerance(1s)
-    |httpOut('join')
-    |eval(lambda: "testvalue1.value1" - "testvalue1.value2")
+sensor1
+    |join(sensor2)
+	    .as('sensor1', 'sensor2')
+		.tolerance(2s)
+	|eval(lambda: "sensor2.value" - "sensor1.value")
 	    .as('diff')
-    |httpOut('diff')
+	|log()
     |influxDBOut()
-        .create()
-        .database('mydb')
-        .retentionPolicy('myrp')
-        .measurement('diff')
+	    .database('telegraf')
+        .measurement('diff_sensor2_sensor1')
+		.buffer(1)    // .flushInterval(1s)
+
+// var testvalue1 = stream
+//     |from()
+// 	    .database('telegraf')
+//         .retentionPolicy('autogen')
+//         .measurement('mqtt_consumer')
+//         .where(lambda: "topic" == 'test/value/1')
+// 		.groupBy(*)
+// 	|httpOut('value1')
+
+// var testvalue2 = stream
+//     |from()
+// 	    .database('telegraf')
+//         .retentionPolicy('autogen')
+//         .measurement('mqtt_consumer')
+//         .where(lambda: "topic" == 'test/value/2')
+// 		.groupBy(*)
+// 	|httpOut('value2')
+
+// testvalue1
+//     |join(testvalue2)
+// 	    .as('value1', 'value2')
+// 		.tolerance(1s)
+//     |httpOut('join')
+//     |eval(lambda: "testvalue1.value1" - "testvalue1.value2")
+// 	    .as('diff')
+//     |httpOut('diff')
+//     |influxDBOut()
+//         .create()
+//         .database('mydb')
+//         .retentionPolicy('myrp')
+//         .measurement('diff')
 
 
 

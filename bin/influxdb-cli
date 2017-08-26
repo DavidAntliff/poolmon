@@ -1,4 +1,14 @@
 #!/bin/bash
+#
+# Example:
+#  $ bin/influxdb-cli -precision rfc3339 -database NOAA_water_database
+#
+
+: ${INFLUXDB_HOSTNAME:=influxdb}
+: ${COMMAND:=influx -host $INFLUXDB_HOSTNAME $*}
+
+# mount current directory in container on /host
+CWD=$PWD
 
 cd $(dirname $0)
 . ../services/common
@@ -11,6 +21,9 @@ if ./check-influxdb ; then
       --name influxdb-cli \
       --hostname influxdb-cli \
       --network $NETWORK \
+      --volume $CWD/:/host/ \
+      --workdir /host \
       poolmon/influxdb \
-      influx -host influxdb
+      bash -l -i -c "$COMMAND"
 fi
+

@@ -1,0 +1,30 @@
+// rid=$(kapacitor record query -query $'select * from "telegraf"."autogen"."mqtt_consumer" where time >= 1503724000s and time <= 1503724030s and "topic" =~ /test\/value/' -type stream)
+// kapacitor define test_diff -type stream -tick test_diff.tick -dbrp telegraf.autogen
+// kapacitor replay -recording $rid -task test_diff
+
+var testvalue1 = stream
+    |from()
+	    .measurement('mqtt_consumer')
+		.where(lambda: "topic" == 'test/value/1')
+	//|log()
+
+var testvalue2 = stream
+    |from()
+	    .measurement('mqtt_consumer')
+		.where(lambda: "topic" == 'test/value/2')
+	//|log()
+
+testvalue1
+    |join(testvalue2)
+	    .as('value1', 'value2')
+		.tolerance(1s)
+    |eval(lambda: "value2.value" - "value1.value")
+	    .as('diff')
+    |log()
+    |httpOut('diff')
+    |influxDBOut()
+        //.create()
+        .database('test')
+        //.retentionPolicy('autogen')
+        .measurement('diff')
+

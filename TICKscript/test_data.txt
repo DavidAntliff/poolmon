@@ -1,0 +1,72 @@
+# DDL
+CREATE DATABASE test
+
+# DML
+# CONTEXT-DATABASE:test
+# CONTEXT-RETENTION-POLICY:autogen
+
+one value=1 1504000000
+one value=2 1504000010
+one value=3 1504000020
+one value=4 1504000030
+one value=5 1504000040
+one value=6 1504000050
+one value=7 1504000060
+one value=8 1504000070
+
+two value=10 1504000000
+two value=20 1504000010
+two value=30 1504000020
+two value=40 1504000030
+two value=50 1504000040
+two value=60 1504000050
+two value=70 1504000060
+two value=80 1504000070
+
+# slightly delayed data (1 second later than 'one')
+three value=10 1504000001
+three value=20 1504000011
+three value=30 1504000021
+three value=40 1504000031
+three value=50 1504000041
+three value=60 1504000051
+three value=70 1504000061
+three value=80 1504000071
+
+# single measurement, aligned
+four,topic=foo value=1 1504000000
+four,topic=foo value=2 1504000010
+four,topic=foo value=3 1504000020
+four,topic=foo value=4 1504000030
+four,topic=foo value=5 1504000040
+four,topic=foo value=6 1504000050
+four,topic=foo value=7 1504000060
+four,topic=foo value=8 1504000070
+four,topic=bar value=10 1504000000
+four,topic=bar value=20 1504000010
+four,topic=bar value=30 1504000020
+four,topic=bar value=40 1504000030
+four,topic=bar value=50 1504000040
+four,topic=bar value=60 1504000050
+four,topic=bar value=70 1504000060
+four,topic=bar value=80 1504000070
+
+# single measurement, misaligned
+five,topic=foo value=1 1504000000
+five,topic=foo value=2 1504000010
+five,topic=foo value=3 1504000020
+five,topic=foo value=4 1504000030
+five,topic=foo value=5 1504000040
+five,topic=foo value=6 1504000050
+five,topic=foo value=7 1504000060
+five,topic=foo value=8 1504000070
+five,topic=bar value=10 1504000001
+five,topic=bar value=20 1504000012
+five,topic=bar value=30 1504000023
+five,topic=bar value=40 1504000032
+five,topic=bar value=50 1504000041
+five,topic=bar value=60 1504000049
+five,topic=bar value=70 1504000060
+five,topic=bar value=80 1504000071
+
+

@@ -104,6 +104,19 @@ To examine a specific task:
 
     $ kapacitor show <task_name>
 
+To record a stream for a time range (note the 's' suffix for second precision):
+
+    $ kapacitor record query -type stream \
+	    -query $'select * from "<db>"."<rp>"."<measurement1>" \
+		         where time >= 1504000000s and time <= 1504000070s'
+
+To record multiple streams withina time range simulataneously:
+
+    $ kapacitor record query -type stream \
+	    -query $'select * from "<db>"."<rp>"."<measurement1>" \
+		         where time >= 1504000000s and time <= 1504000070s; \
+				 select * from "<db>"."<rp>"."<measurement2>" \
+				 where time >= 1504000000s and time <= 1504000170s'
 
 ## Roadmap
 

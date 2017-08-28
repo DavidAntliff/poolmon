@@ -15,6 +15,7 @@ services:
       - ${SRV}/mosquitto/config/:/mqtt/config/:ro
       - ${SRV}/mosquitto/log/:/mqtt/log/
       - ${SRV}/mosquitto/data/:/mqtt/data/
+    restart: unless-stopped
 
   tickbase:
     image: poolmon/tickbase
@@ -42,6 +43,7 @@ services:
       - /sys:/rootfs/sys:ro
       - /proc:/rootfs/proc:ro
       - /etc:/rootfs/etc:ro
+    restart: unless-stopped
 
   influxdb:
     hostname: influxdb
@@ -54,6 +56,7 @@ services:
     volumes:
       - ${SRV}/influxdb/config/:/etc/influxdb/:ro
       - ${SRV}/influxdb/data/:/var/lib/influxdb/
+    restart: unless-stopped
 
   chronograf:
     hostname: chronograf
@@ -71,6 +74,7 @@ services:
       - "8888:8888"
     volumes:
       - ${SRV}/chronograf/data/:/var/lib/chronograf/
+    restart: unless-stopped
 
   kapacitor:
     hostname: kapacitor
@@ -88,6 +92,7 @@ services:
       - ${SRV}/kapacitor/config/:/etc/kapacitor/:ro
       - ${SRV}/kapacitor/data/:/var/lib/kapacitor/
       - ${SRV}/kapacitor/log/:/var/log/kapacitor/
+    restart: unless-stopped
 
   grafana:
     hostname: grafana
@@ -101,6 +106,7 @@ services:
       - ${SRV}/grafana/config/:/etc/grafana/:ro
       - ${SRV}/grafana/data/:/var/lib/grafana/
       - ${SRV}/grafana/log/:/var/log/grafana/
+    restart: unless-stopped
 
 
     # command: /bin/bash

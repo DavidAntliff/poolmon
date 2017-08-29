@@ -55,10 +55,10 @@ function simulateTemp(mean, variance) {
 }
 
 function publishTemps() {
-	mqtt.publish("mydevice/sensor1", simulateTemp(20.0, 1.0));
-	mqtt.publish("mydevice/sensor2", simulateTemp(25.0, 2.0));
-	mqtt.publish("mydevice/sensor3", simulateTemp(10.0, 1.0));
-	mqtt.publish("mydevice/sensor4", simulateTemp(44.0, 4.0));
+	mqtt.publish("mydevice/sensor1", simulateTemp(18.0, 1.0));
+	mqtt.publish("mydevice/sensor2", simulateTemp(30.0, 2.0));
+	mqtt.publish("mydevice/sensor3", simulateTemp(18.0, 1.0));
+	mqtt.publish("mydevice/sensor4", simulateTemp(50.0, 10.0));
 }
 
 function publishLoop(delay_ms, publish_fn)
@@ -96,5 +96,5 @@ function publishLoop(delay_ms, publish_fn)
 	return true;
 }
 
-publishLoop(60 * 1000, publishTemps);
+publishLoop(5 * 1000, publishTemps);
 

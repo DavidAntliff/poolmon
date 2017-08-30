@@ -13,5 +13,4 @@ EXPOSE 3000
 VOLUME ["/var/lib/grafana", "/var/log/grafana", "/etc/grafana"]
 
 #CMD ["/usr/sbin/grafana-server", "-config", "/etc/grafana/grafana.ini", "-homepath", "/usr/share/grafana"]
-
 CMD ["/run.sh"]

@@ -16,7 +16,7 @@
 # implied. See the License for the specific language governing
 # permissions and limitations under the License.
 #
-# Modified by David Antliff:
+# Modified by David Antliff, August 2017:
 #  - remove dependency on 'gosu'
 #  - remove chown on /etc/grafana
 

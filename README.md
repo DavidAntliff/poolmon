@@ -5,14 +5,109 @@ an ESP32-based embedded system, to a web-based dashboard.
 
 It currently consists of a MQTT Broker (Mosquitto), Telegraf (acting as an MQTT Consumer), InfluxDB,
 Chronograf and Kapacitor (the so-called [TICK](https://www.influxdata.com/time-series-platform/) stack).
+Grafana is used for dashboard visualisation.
 
 In this initial version of the project, the services required are running on a Raspberry Pi 3, via Docker.
 
-## Dependencies
+## Raspberry Pi Setup
 
-Docker Compose:
+Download Raspbian Stretch Lite from [here](https://www.raspberrypi.org/downloads/raspbian/).
 
-    $ pip install docker-compose
+Flash this to at least an 8GB microSD card. [Etcher](http://etcher.io) works well (and verifies), or use `dd`.
+
+Mount the microSD card and create the empty file `ssh` - this will enable the SSH server on boot.
+
+Also create `wpa_supplicant.conf` with the following content, modified for your circumstances:
+
+```
+country=NZ
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+
+network={
+    ssid="YourWifiSSID"
+    psk="YourWifiSecretKey"
+    key_mgmt=WPA-PSK
+}
+```
+
+The `ctrl_interface` line seems necessary to work around an issue with Stretch and wireless interface naming.
+
+Power up the Raspberry Pi - if you have DHCP on your network, it should appear with the name 'raspberrypi'.
+
+SSH to the RPi as user "pi" with password "raspberry":
+
+`ssh pi@raspberrypi`
+
+Check that your previous `wpa_supplicant.conf` file has been automatically copied to `/etc/wpa_supplicant/wpa_supplicant.conf` and that the contents is correct.
+
+Update the system with:
+
+    $ sudo apt-get update
+    $ sudo apt-get dist-upgrade
+
+Configure the RPi with `sudo raspi-config` and ensure:
+
+ - 8 Update - should already be the latest, but just to be sure!
+ - 3 Boot Options > B1 Desktop / CLI > B1 Console - Text console, requiring user to login
+ - 5 Interfacing Options > P2 SSH > Yes - Enable SSH Server
+ - 7 Advanced Options > A1 Expand Filesystem
+
+Then choose "Finish" and opt to reboot the RPi.
+
+Check that it comes back up and that you can ssh into it.
+
+
+
+
+### Docker
+
+The `curl -sSL https://get.docker.com | sh` trick seems to be deprecated and no longer works as of August 2017.
+
+Instead, follow the directions presented [here](https://docs.docker.com/engine/installation/linux/docker-ce/debian/#install-using-the-repository).
+
+That is:
+
+```
+$ sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common
+$ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+$ sudo apt-key fingerprint 0EBFCD88
+# Verify key is 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88
+$ echo "deb [arch=armhf] https://download.docker.com/linux/debian \
+     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+$ sudo apt-get update
+$ sudo apt-get install docker-ce
+$ sudo addgroup pi docker
+```
+
+Log out and then back in, and verify that Docker is correctly installed:
+
+```
+$ docker run armhf/hello-world
+
+Hello from Docker on armhf!
+This message shows that your installation appears to be working correctly.
+...
+```
+
+### Docker Compose
+
+There are various ways to install Docker Compose. I found `pip` to be the easiest and most up to date.
+
+    $ sudo apt-get install python-pip
+    $ sudo pip install docker-compose
+
+Install bash autocompletion with:
+
+    $ sudo curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
+
+## Cloning
+
+Install `git` and clone the project:
+
+    $ sudo apt-get install git
+    $ git clone https://github.com/DavidAntliff/poolmon.git
+    $ cd poolmon
 
 ## Building
 
@@ -23,13 +118,13 @@ To build all the docker containers:
 
 ## Running
 
-To start the stack (`--force-recreate` used to ensure fresh containers):
-
     $ cd services
-    $ docker-compose -p poolmon up --force-recreate
 
-Hit CTRL-C to terminate the stack. You can then bring it back up with the `up` command immediately, or shut\
-it down entirely (to create new containers on next up) with:
+To start the stack (`--force-recreate` can be used to ensure fresh containers):
+
+    $ docker-compose -p poolmon up -d
+
+Shut the stack down entirely (to create new containers on next up) with:
 
     $ docker-compose -p poolmon down
 
@@ -43,11 +138,23 @@ Optionally specify the service name:
 
 ## Interfaces
 
-Access the Chronograf interface via HTTP on port 8888.
+### MQTT
 
 You can use an embedded device to publish data via MQTT, or use [mqtt-spy](http://kamilfb.github.io/mqtt-spy/)
 to publish data and monitor your topics. Scripts can be used to automate publishing data, such as simulating
 temperature measurement data.
+
+### Chronograf
+
+Access the Chronograf interface via HTTP on port 8888.
+
+### Grafana
+
+Access the Grafana interface via HTTP on port 3000.
+
+Add the InfluxDB instance (`http://influxdb:8086`) via Proxy access, and select database `telegraf`.
+
+Dashboards can be easily exported (saved to JSON file) or imported.
 
 ## TICKscripts
 
@@ -120,10 +227,10 @@ To record multiple streams withina time range simulataneously:
 
 ## Roadmap
 
-* Add [Grafana](https://grafana.com/) to the TICK stack.
 * Get ESP32 talking MQTT.
 * Enable MQTT security.
 * Enable InfluxDB security.
+* Add control panel for controlling ESP32 via web.
 
 ## Acknowledgements
 

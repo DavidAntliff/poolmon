@@ -122,19 +122,19 @@ To build all the docker containers:
 
 To start the stack (`--force-recreate` can be used to ensure fresh containers):
 
-    $ docker-compose -p poolmon up -d
+    $ docker-compose up -d
 
 Shut the stack down entirely (to create new containers on next up) with:
 
-    $ docker-compose -p poolmon down
+    $ docker-compose down
 
 If changes are made to a Dockerfile, you can rebuild the images and restart only the changed services with:
 
-    $ docker-compose -p poolmon up -d --build
+    $ docker-compose up -d --build
 
 Optionally specify the service name:
 
-    $ docker-compose -p poolmon up -d --build kapacitor
+    $ docker-compose up -d --build kapacitor
 
 ## Interfaces
 

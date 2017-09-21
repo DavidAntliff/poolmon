@@ -114,6 +114,23 @@ services:
 #    restart: unless-stopped
 
 
+  nodered:
+    hostname: nodered
+    image: machinedata/node-red
+    depends_on:
+      - mosquitto
+    environment:
+      NODE_RED_FLOW_FILE: "my_flows.json"
+    ports:
+      - 1880:1880
+    volumes:
+      # may need the "readonly" fix from https://github.com/machine-data/docker-node-red/pull/2
+      - ${SRV}/nodered/config/settings.js:/config/settings.js:ro
+      - ${SRV}/nodered/data/:/data/
+#    restart: unless-stopped
+
+
+
     # command: /bin/bash
     # stdin_open: true
     # tty: true

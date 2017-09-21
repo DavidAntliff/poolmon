@@ -1,0 +1,120 @@
+# SRV comes from .env
+
+version: '3'
+
+services:
+  mosquitto:
+    hostname: mosquitto
+    image: poolmon/mosquitto:latest
+    build:
+      context: ../mosquitto/
+      dockerfile: Dockerfile.x86_64
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ${SRV}/mosquitto/config/:/mqtt/config/:ro
+      - ${SRV}/mosquitto/log/:/mqtt/log/
+      - ${SRV}/mosquitto/data/:/mqtt/data/
+#    restart: unless-stopped
+
+  tickbase:
+    image: poolmon/tickbase
+    build:
+      context: ../tickbase/
+      dockerfile: Dockerfile.x86_64
+
+  telegraf:
+    hostname: telegraf
+    image: poolmon/telegraf:latest
+    depends_on:
+      - tickbase
+      - influxdb
+      - mosquitto
+    build: ../telegraf/
+    environment:
+      HOST_PROC: "/rootfs/proc"
+      HOST_SYS: "/rootfs/sys"
+      HOST_ETC: "/rootfs/etc"
+    ports:
+      - "8092:8092/udp"
+      - "8094:8094"
+      - "8125:8125/udp"
+    volumes:
+      - ${SRV}/telegraf/config/:/etc/telegraf/:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+#    restart: unless-stopped
+
+  influxdb:
+    hostname: influxdb
+    image: poolmon/influxdb:latest
+    depends_on:
+      - tickbase
+    build: ../influxdb/
+    ports:
+      - "8086:8086"
+    volumes:
+      - ${SRV}/influxdb/config/:/etc/influxdb/:ro
+      - ${SRV}/influxdb/data/:/var/lib/influxdb/
+#    restart: unless-stopped
+
+  chronograf:
+    hostname: chronograf
+    image: poolmon/chronograf:latest
+    depends_on:
+      - tickbase
+      - kapacitor
+      - influxdb
+      - telegraf
+    build: ../chronograf/
+    environment:
+      INFLUXDB_URL: "http://influxdb:8086"
+      KAPACITOR_URL: "http://kapacitor:9092"
+    ports:
+      - "8888:8888"
+    volumes:
+      - ${SRV}/chronograf/data/:/var/lib/chronograf/
+#    restart: unless-stopped
+
+  kapacitor:
+    hostname: kapacitor
+    image: poolmon/kapacitor:latest
+    depends_on:
+      - tickbase
+      - influxdb
+    build: ../kapacitor/
+    environment:
+      KAPACITOR_HOSTNAME: "kapacitor"
+      KAPACITOR_INFLUXDB_0_URLS_0: "http://influxdb:8086"
+    ports:
+      - "9092:9092"
+    volumes:
+      - ${SRV}/kapacitor/config/:/etc/kapacitor/:ro
+      - ${SRV}/kapacitor/data/:/var/lib/kapacitor/
+      - ${SRV}/kapacitor/log/:/var/log/kapacitor/
+#    restart: unless-stopped
+
+  grafana:
+    hostname: grafana
+    image: poolmon/grafana:latest
+    depends_on:
+      - influxdb
+    build:
+      context: ../grafana/
+      dockerfile: Dockerfile.x86_64
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${SRV}/grafana/config/:/etc/grafana/:ro
+      - ${SRV}/grafana/data/:/var/lib/grafana/
+      - ${SRV}/grafana/log/:/var/log/grafana/
+#    restart: unless-stopped
+
+
+    # command: /bin/bash
+    # stdin_open: true
+    # tty: true
+

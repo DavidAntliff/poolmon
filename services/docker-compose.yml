@@ -107,6 +107,20 @@ services:
       - ${SRV}/grafana/log/:/var/log/grafana/
     restart: unless-stopped
 
+  nodered:
+    hostname: nodered
+    image: nodered/node-red-docker:rpi
+    depends_on:
+      - mosquitto
+#    environment:
+#      NODE_RED_FLOW_FILE: "my_flows.json"
+    ports:
+      - 1880:1880
+    volumes:
+      # make the owner of ${SRV}/nodered/data match the node-red user ID in the container
+      - ${SRV}/nodered/config/settings.js:/config/settings.js:ro
+      - ${SRV}/nodered/data/:/data/
+#    restart: unless-stopped
 
     # command: /bin/bash
     # stdin_open: true

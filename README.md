@@ -3,6 +3,8 @@
 This is a personal project to deliver temperature data from several DS18B20 temperature sensors, connected via
 an ESP32-based embedded system, to a web-based dashboard.
 
+The [ESP32 project](https://github.com/DavidAntliff/esp32-poolmon).
+
 It currently consists of a MQTT Broker (Mosquitto), Telegraf (acting as an MQTT Consumer), InfluxDB,
 Chronograf and Kapacitor (the so-called [TICK](https://www.influxdata.com/time-series-platform/) stack).
 Grafana is used for dashboard visualisation.

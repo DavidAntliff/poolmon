@@ -136,6 +136,37 @@ Optionally specify the service name:
 
     $ docker-compose up -d --build kapacitor
 
+## InfluxDB
+
+THe influxdb server is called _influxdb_ and it is accessible from the RPi itself.
+
+Check influxdb is running:
+
+```curl -I http://localhost:8086/ping```
+
+Command-line access to influxdb:
+
+```docker run -it --rm --network poolmon_default poolmon/influxdb influx -host influxdb```
+
+### Useful Queries
+
+```> show databases````
+
+The database automatically created and populated by telegraf is called `telegraf`:
+```> use telegraf```
+
+Show all available measurements:
+```> show measurements```
+
+The mqtt topics that telegraf subscribes to are stored in `mqtt_consumer`.
+
+Set the time format:
+
+```> precision rfc3339```
+Obtain last hour of readings from temp sensor 2:
+
+```> select "value" from "mqtt_consumer" where "topic" = 'poolmon/sensors/temp/2/value' and time < now() - 1h```
+
 ## Interfaces
 
 ### MQTT

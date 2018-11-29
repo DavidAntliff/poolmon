@@ -150,7 +150,7 @@ Command-line access to influxdb:
 
 ### Useful Queries
 
-```> show databases````
+```> show databases```
 
 The database automatically created and populated by telegraf is called `telegraf`:
 ```> use telegraf```

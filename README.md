@@ -153,9 +153,11 @@ Command-line access to influxdb:
 ```> show databases```
 
 The database automatically created and populated by telegraf is called `telegraf`:
+
 ```> use telegraf```
 
 Show all available measurements:
+
 ```> show measurements```
 
 The mqtt topics that telegraf subscribes to are stored in `mqtt_consumer`.
@@ -163,6 +165,7 @@ The mqtt topics that telegraf subscribes to are stored in `mqtt_consumer`.
 Set the time format:
 
 ```> precision rfc3339```
+
 Obtain last hour of readings from temp sensor 2:
 
 ```> select "value" from "mqtt_consumer" where "topic" = 'poolmon/sensors/temp/2/value' and time < now() - 1h```

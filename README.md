@@ -80,6 +80,12 @@ $ sudo apt-get install raspberrypi-kernel-headers docker-ce
 $ sudo addgroup pi docker
 ```
 
+Note: January 2019: 18.09.03 seems to be [broken](https://github.com/moby/moby/issues/38175#issuecomment-438201988). Use 18.06.1 instead:
+
+```
+sudo apt-get install docker-ce=18.06.1~ce~3-0~raspbian
+```
+
 Log out and then back in, and verify that Docker is correctly installed:
 
 ```

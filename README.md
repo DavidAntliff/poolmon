@@ -265,9 +265,20 @@ To record multiple streams withina time range simulataneously:
 				 select * from "<db>"."<rp>"."<measurement2>" \
 				 where time >= 1504000000s and time <= 1504000170s'
 
+## Tweaks
+
+* Edit `/etc/docker/daemon.json` and disable Docker logging (to save SD card writes):
+
+```
+{
+  "log-driver": "none"
+}
+```
+
+Restart docker and all containers for the change to take effect.
+
 ## Roadmap
 
-* Get ESP32 talking MQTT.
 * Enable MQTT security.
 * Enable InfluxDB security.
 * Add control panel for controlling ESP32 via web.
